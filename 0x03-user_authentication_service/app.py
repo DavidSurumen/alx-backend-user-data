@@ -11,7 +11,7 @@ from flask import (
 app = Flas(__name__)
 
 
-@route("/", methods=["GET"], strict_slashes=False)
+@app.route("/", methods=["GET"], strict_slashes=False)
 def index() -> str:
     """
     Returns a json payload for homepage
