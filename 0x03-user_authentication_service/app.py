@@ -8,7 +8,7 @@ from flask import (
 )
 
 
-app = Flas(__name__)
+app = Flask(__name__)
 
 
 @app.route("/", methods=["GET"], strict_slashes=False)
