@@ -6,6 +6,8 @@ from flask import (
     Flask,
     jsonify,
     request,
+    abort,
+    make_response,
 )
 from auth import Auth
 
@@ -33,6 +35,27 @@ def users() -> str:
         return jsonify({"email": email, "message": "user created"})
     except ValueError:
         return jsonify({"message": "email already registered"}), 400
+
+
+@app.route('/sessions', methods=["POST"], strict_slashes=False)
+def login():
+    """
+    User sessions function
+    """
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    if not email or not password:
+        abort(401, 'email or password is not provided in the request')
+
+    if AUTH.valid_login(email, password):
+        session_id = AUTH.create_session(email)
+        resp = make_response(jsonify({'email': "{}".format(email),
+                                      'message': "logged in"
+                                      }))
+        resp.set_cookie('session_id', session_id)
+        return resp
+    abort(401)
 
 
 if __name__ == "__main__":
