@@ -8,6 +8,8 @@ from flask import (
     request,
     abort,
     make_response,
+    redirect,
+    url_for,
 )
 from auth import Auth
 
@@ -56,6 +58,24 @@ def login():
         resp.set_cookie('session_id', session_id)
         return resp
     abort(401)
+
+
+@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
+def logout():
+    """
+    Logs out an active user
+    """
+    session_id = request.cookies.get("session_id")
+
+    if not session_id:
+        abort(401, 'no session id in the cookies')
+
+    user = AUTH.get_user_from_session_id(session_id)
+    if not user:
+        abort(403)
+
+    AUTH.destroy_session(user.id)
+    return redirect(url_for('index'))
 
 
 if __name__ == "__main__":
