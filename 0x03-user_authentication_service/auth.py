@@ -86,3 +86,17 @@ class Auth:
             return self._db.find_user_by(session_id=session_id)
         except NoResultFound:
             return None
+
+    def destroy_session(self, user_id: int) -> None:
+        """
+        Destroys an active user session
+        """
+        if not user_id or type(user_id) is not int:
+            raise TypeError('provide an integer user_id')
+
+        try:
+            user = self._db.find_user_by(id=user_id)
+            user.session_id = None
+            return
+        except Exception:
+            return
