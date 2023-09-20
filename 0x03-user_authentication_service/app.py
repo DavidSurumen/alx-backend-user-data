@@ -42,7 +42,7 @@ def users() -> str:
 @app.route('/sessions', methods=["POST"], strict_slashes=False)
 def login():
     """
-    User sessions function
+    Logs in an existing user
     """
     email = request.form.get("email")
     password = request.form.get("password")
@@ -68,7 +68,7 @@ def logout():
     session_id = request.cookies.get("session_id")
 
     if not session_id:
-        abort(403, 'no session id in the cookies')
+        abort(403, 'no session id in cookie')
 
     user = AUTH.get_user_from_session_id(session_id)
     if not user:
@@ -76,6 +76,23 @@ def logout():
 
     AUTH.destroy_session(user.id)
     return redirect(url_for('index'))
+
+
+@app.route('/profile', methods=['GET'], strict_slashes=False)
+def profile():
+    """
+    Returns the profile an active user
+    """
+    session_id = request.cookies.get("session_id")
+
+    if not session_id:
+        abort(403, 'no session id in cookie')
+
+    user = AUTH.get_user_from_session_id(session_id)
+    if not user:
+        abort(403)
+
+    return jsonify({'email': "{}".format(user.email)})
 
 
 if __name__ == "__main__":
