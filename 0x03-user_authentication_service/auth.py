@@ -66,7 +66,7 @@ class Auth:
         user = None
         try:
             user = self._db.find_user_by(email=email)
-        except NoResultsFound:
+        except NoResultFound:
             return None
 
         if user is None:
@@ -85,4 +85,4 @@ class Auth:
         try:
             return self._db.find_user_by(session_id=session_id)
         except NoResultFound:
-            return none
+            return None
