@@ -106,10 +106,10 @@ def get_reset_password_token():
         abort(403, 'must provide an email to reset password')
 
     try:
-        user = AUTH.get_reset_password_token(email)
+        reset_token = AUTH.get_reset_password_token(email)
         return jsonify({
                             'email': "{}".format(email),
-                            'reset_token': "{}".format(user.reset_token)
+                            'reset_token': "{}".format(reset_token)
                         })
     except ValueError:
         abort(403)
