@@ -62,6 +62,30 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     return conn
 
 
+def main() -> None:
+    """
+    Logs information about a user
+    """
+    fields = "name,email,phone,ssn,password,ip,last_login,user_agent"
+    cols = fields.split(',')
+    query = "SELECT {} FROM users;".format(fields)
+    logger = get_logger()
+    conn = get_db()
+
+    with conn.cursor() as cursor:
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        for row in rows:
+            record = map(
+                    lambda x: '{}={}'.format(x[0], x[1]),
+                    zip(cols, row),
+                    )
+            msg = '{};'.format('; '.join(list(record)))
+            args = ('user_data', logging.INFO, None, None, msg, None, None)
+            log = logging.LogRecord(*args)
+            logger.handle(log)
+
+
 class RedactingFormatter(logging.Formatter):
     """Redacting Formatter class
     """
@@ -80,3 +104,7 @@ class RedactingFormatter(logging.Formatter):
         """
         msg = super(RedactingFormatter, self).format(record)
         return filter_datum(self.fields, self.REDACTION, msg, self.SEPARATOR)
+
+
+if __name__ == '__main__':
+    main()
