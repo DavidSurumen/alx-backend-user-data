@@ -21,7 +21,7 @@ class Auth:
         """
         if not excluded_paths or len(excluded_paths) == 0:
             return True
-        if path.split('/')[-1] != '':
+        if path and path.split('/')[-1] != '':
             path = path + '/'
 
         if not path or path not in excluded_paths:
