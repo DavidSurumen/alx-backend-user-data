@@ -10,6 +10,7 @@ from typing import (
     TypeVar,
 )
 import re
+import os
 
 
 class Auth:
@@ -62,3 +63,12 @@ class Auth:
             request - flask request object
         """
         return None
+
+    def session_cookie(self, request=None):
+        """
+        Retrieves a cookie value from a request
+        """
+        if not request:
+            return None
+        cookie = os.getenv("SESSION_NAME")
+        return request.cookies.get(cookie)
