@@ -64,10 +64,14 @@ def before_request():
 
     if auth.require_auth(request.path, paths):
         # authentication is required
-        if not auth.authorization_header(request) and\
-                not auth.session_cookie(request):
-            print(auth.authorization_header(request))
-            abort(401)
+        if auth_type == 'basic_auth':
+            # check authorization header
+            if not auth.authorization_header(request):
+                abort(401)
+        elif auth_type == 'session_auth':
+            # check session cookie
+            if not auth.session_cookie(request):
+                abort(401)
 
         request.current_user = auth.current_user(request)
         if not request.current_user:
