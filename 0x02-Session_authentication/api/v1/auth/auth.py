@@ -45,7 +45,7 @@ class Auth:
 
     def authorization_header(self, request=None) -> str:
         """
-
+        Retrieves the authorization key from request header
         Parameters:
             request - flask request object
         """
@@ -58,7 +58,7 @@ class Auth:
 
     def current_user(self, request=None) -> TypeVar('User'):
         """
-
+        Retrieves a user object
         Parameters:
             request - flask request object
         """
@@ -66,7 +66,7 @@ class Auth:
 
     def session_cookie(self, request=None):
         """
-        Retrieves a cookie value from a request
+        Retrieves a cookie value from a request, as session ID.
         """
         if not request:
             return None
