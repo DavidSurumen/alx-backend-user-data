@@ -27,7 +27,7 @@ class SessionExpAuth(SessionAuth):
         """ (Overloads)
         Creates a session for a user, and assigns duration
         """
-        sess_id = super().create_session(user_id)   # call create_session() method of base class
+        sess_id = super().create_session(user_id)
 
         if not sess_id:
             return None
