@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Session expiration module
+Session Auth with expiration module
 """
 from api.v1.auth.session_auth import SessionAuth
 import os
