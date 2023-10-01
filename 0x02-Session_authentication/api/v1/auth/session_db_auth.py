@@ -47,6 +47,10 @@ class SessionDBAuth(SessionExpAuth):
 
         for obj in all_objs:
             if obj.session_id == session_id:
+                expiry = obj.created_at +\
+                        timedelta(seconds=self.session_duration)
+                if expiry < datetime.now():
+                    return
                 return obj.user_id
         return
 
