@@ -11,7 +11,7 @@ from models.user import User
 class SessionAuth(Auth):
     """ Session authentication class
     """
-    user_id_by_session_id = {}
+    user_id_by_session_id = {}    # { <session ID> : <user ID> }
 
     def create_session(self, user_id: str = None) -> str:
         """
