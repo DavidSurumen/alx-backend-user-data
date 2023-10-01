@@ -12,6 +12,7 @@ from datetime import (
 
 TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%S"
 
+
 class SessionDBAuth(SessionExpAuth):
     """ Session authentication class
     """
