@@ -49,6 +49,9 @@ class Base():
         """
         result = {}
         for key, value in self.__dict__.items():
+            # the 'for_serialization' variable only concerns the password
+            # and since the password key is '_password', it will be skipped
+            # by the serialization process if 'for_serialization' stays False
             if not for_serialization and key[0] == '_':
                 continue
             if type(value) is datetime:
@@ -106,7 +109,7 @@ class Base():
         """ Count all objects
         """
         s_class = cls.__name__
-        return len(DATA[s_class].keys())
+        return len(DATA[s_class])
 
     @classmethod
     def all(cls) -> Iterable[TypeVar('Base')]:
@@ -133,5 +136,4 @@ class Base():
                 if (getattr(obj, k) != v):
                     return False
             return True
-        
         return list(filter(_search, DATA[s_class].values()))
