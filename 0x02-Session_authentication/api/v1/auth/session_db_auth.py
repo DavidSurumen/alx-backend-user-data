@@ -23,6 +23,8 @@ class SessionDBAuth(SessionExpAuth):
         Return:
             session ID (str)
         """
+        if not user_id or type(user_id) is not str:
+            return
         session_id = super().create_session(user_id)
         user_session = UserSession()
         user_session.user_id = user_id
