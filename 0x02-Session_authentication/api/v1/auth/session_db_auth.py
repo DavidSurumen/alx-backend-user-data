@@ -8,6 +8,7 @@ from datetime import (
     datetime,
     timedelta,
 )
+from models.user_session import UserSession
 
 
 TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%S"
@@ -23,7 +24,10 @@ class SessionDBAuth(SessionExpAuth):
             session ID (str)
         """
         session_id = super().create_session(user_id)
-        self.save_to_file(session_id)
+        user_session = UserSession()
+        user_session.user_id = user_id
+        user_session.session_id = session_id
+        user_session.save()
         return session_id
 
     def user_id_for_session_id(self, session_id=None):
@@ -33,16 +37,16 @@ class SessionDBAuth(SessionExpAuth):
         Return:
             user_id (str)
         """
-        self.load_from_file()
-        sess_dct = self.user_id_by_session_id.get(session_id)
-        if sess_dct:
-            if self.session_duration <= 0:
-                return sess_dct.get('user_id')
-            if sess_dct.get('created_at'):
-                expiry = sess_dct.get('created_at') +\
-                        timedelta(seconds=self.session_duration)
-                if expiry >= datetime.now():
-                    return sess_dct.get('user_id')
+        if not session_id:
+            return
+
+        UserSession.load_from_file()
+        all_objs = UserSession.all()
+
+        for obj in all_objs:
+            if obj.session_id == session_id:
+                return obj.user_id
+        return
 
     def destroy_session(self, request=None):
         """ (Overloads)
@@ -53,10 +57,9 @@ class SessionDBAuth(SessionExpAuth):
             return None
         sess_id = self.session_cookie(request)
         if sess_id:
-            user_id = self.user_id_for_session_id(sess_id)
-            if user_id:
-                del self.user_id_by_session_id[sess_id]
-                self.save_to_file()
+            sess_objs_list = UserSession.search(session_id=sess_id)
+            if len(sess_obj_list) > 0:
+                sess_obj_list[0].remove()
                 return True
         return False
 
